@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+use ITEA\PhpStaticAnalyzer\Analyzer\ClassesCreatedByDeveloperAnalyzer;
+use ITEA\PhpStaticAnalyzer\Command\ClassesCreatedByDeveloperCommand;
+use Symfony\Component\Console\Application;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$application = new Application('PHP Static Analyzer', 'v1.0.0');
+
+$analyzer = new ClassesCreatedByDeveloperAnalyzer();
+$command = new ClassesCreatedByDeveloperCommand($analyzer);
+$application->add($command);
+
+$application->run();
