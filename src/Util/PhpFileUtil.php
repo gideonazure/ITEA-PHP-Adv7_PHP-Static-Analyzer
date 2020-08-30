@@ -6,7 +6,7 @@ namespace ITEA\PhpStaticAnalyzer\Util;
 
 final class PhpFileUtil
 {
-    public static function getСlassNameFromFile(string $pathToFile): string
+    public static function getClassNameFromFile(string $pathToFile): string
     {
         $contents = \file_get_contents($pathToFile);
 
