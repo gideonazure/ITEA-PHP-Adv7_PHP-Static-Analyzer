@@ -21,7 +21,7 @@ $ php bin/console class-info-by-name [project_path] [class_name]
 ```
 
 Where `project_path` argument is path to directory when need find class (root path of project for example) 
-and `class_name` argument -  name of class for analyzing.
+and `class_name` argument -  namespace of class for analyzing.
 
 
 
@@ -50,13 +50,7 @@ Demo
 To test this functionality, you can call the command with the specified parameters
 
 ```bash
-$ php bin/console class-info-by-name tests AnalyzerTester
-```
-
-or just call composer script `tester`
-
-```
-$ composer tester
+$ php bin/console class-info-by-name tests ITEA\\PhpStaticAnalyzer\\Tests\\AnalyzerTester
 ```
 
 

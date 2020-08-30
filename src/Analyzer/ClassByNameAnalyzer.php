@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace ITEA\PhpStaticAnalyzer\Analyzer;
 
-use ITEA\PhpStaticAnalyzer\Util\PhpFileUtil;
-use PhpCsFixer\Finder;
-
 /**
  * Class witch analyze class info by class name.
  *
@@ -29,38 +26,34 @@ final class ClassByNameAnalyzer
      * @param string $className      The name of the class on which to analyze
      * @param string $projectSrcPath Working directory path
      *
-     * @return string A string describing the number of methods and parameters
+     * @return array A string describing the number of methods and parameters
      */
-    public function analyze(string $className, string $projectSrcPath = '/'): string
+    public function analyze(string $className, string $projectSrcPath = '/'): array
     {
-        $finder = $this->getFinder($projectSrcPath);
-        $outInfo = '';
+        $outInfo = [];
+        $classInfo = $this->getClassReflectionInstance($className);
 
-        foreach ($finder as $phpFilePath) {
-            $classNamespace = PhpFileUtil::getClassNameFromFile($phpFilePath->getRealPath());
-            $classInfo = $this->getClassReflectionInstance($classNamespace);
+        if ($classInfo->getName() == $className) {
+            $properties = $this->getClassProperties($classInfo);
+            $methods = $this->getClassMethods($classInfo);
 
-            if ($classInfo->getShortName() == $className) {
-                $outInfo = $this->mountAnalyzeReturnString($classInfo);
-            }
+            $outInfo = [
+                'name' => $classInfo->getShortName(),
+                'type' => $this->getClassType($classInfo),
+                'properties' => [
+                    'public' => \count($properties['public']),
+                    'private' => \count($properties['private']),
+                    'protected' => \count($properties['protected']),
+                ],
+                'methods' => [
+                    'public' => \count($methods['public']),
+                    'private' => \count($methods['private']),
+                    'protected' => \count($methods['protected']),
+                ],
+            ];
         }
 
         return $outInfo;
-    }
-
-    /**
-     * Method witch find all PHP files in passed directory.
-     *
-     * @param string $projectSrcPath Working directory path
-     *
-     * @return Finder Finder object with data from finded files
-     */
-    private function getFinder(string $projectSrcPath): Finder
-    {
-        return Finder::create()
-            ->in($projectSrcPath)
-            ->name('/^[A-Z]+\.php$/')
-            ;
     }
 
     /**
@@ -129,29 +122,5 @@ final class ClassByNameAnalyzer
             'public' => $classInfo->getProperties(\ReflectionProperty::IS_PUBLIC),
             'protected' => $classInfo->getProperties(\ReflectionProperty::IS_PROTECTED),
         ];
-    }
-
-    /**
-     * Method create resulting string with info about class for output.
-     *
-     * @param $info /Reflection instance of passed class
-     *
-     * @return string Resulting string with class info
-     */
-    private function mountAnalyzeReturnString($info): string
-    {
-        $properties = $this->getClassProperties($info);
-        $methods = $this->getClassMethods($info);
-        $hasConstructor = (null !== $info->getConstructor() ? ' (1 of them is constructor)' : '');
-
-        return "Class: {$info->getShortName()} is {$this->getClassType($info)} " . \PHP_EOL . '
-                Properties: ' . \PHP_EOL . '
-                    public: ' . \count($properties['public']) . \PHP_EOL . '
-                    protected: ' . \count($properties['protected']) . \PHP_EOL . '
-                    private: ' . \count($properties['private']) . \PHP_EOL . '
-                Methods:
-                    public: ' . \count($methods['public']) . $hasConstructor . \PHP_EOL . '
-                    protected: ' . \count($methods['protected']) . \PHP_EOL . '
-                    private: ' . \count($methods['private']) . \PHP_EOL;
     }
 }

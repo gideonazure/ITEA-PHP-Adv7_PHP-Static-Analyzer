@@ -2,14 +2,21 @@
 <?php
 
 use ITEA\PhpStaticAnalyzer\Analyzer\ClassByNameAnalyzer;
+use ITEA\PhpStaticAnalyzer\Analyzer\ClassesCreatedByDeveloperAnalyzer;
 use ITEA\PhpStaticAnalyzer\Command\ClassByNameAnalyzeCommand;
+use ITEA\PhpStaticAnalyzer\Command\ClassesCreatedByDeveloperCommand;
 use Symfony\Component\Console\Application;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $application = new Application('PHP Static Analyzer', 'v2.0.0');
-$analyzer = new ClassByNameAnalyzer();
-$command = new ClassByNameAnalyzeCommand($analyzer);
+
+$analyzer = new ClassesCreatedByDeveloperAnalyzer();
+$command = new ClassesCreatedByDeveloperCommand($analyzer);
 $application->add($command);
+
+$analyzerByName = new ClassByNameAnalyzer();
+$commandByName = new ClassByNameAnalyzeCommand($analyzerByName);
+$application->add($commandByName);
 
 $application->run();

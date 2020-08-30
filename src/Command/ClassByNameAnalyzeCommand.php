@@ -67,10 +67,22 @@ final class ClassByNameAnalyzeCommand extends Command
     {
         $projectSrcPath = $input->getArgument('project_src_path');
         $className = $input->getArgument('class_name');
-
         $info = $this->analyzer->analyze($className, $projectSrcPath);
 
-        $output->writeln($info);
+        $classProperties = $info['properties'];
+        $classMethods = $info['methods'];
+
+        $infoResult = "Class: {$info['name']} is {$info['type']} " . \PHP_EOL . '
+                Properties: ' . \PHP_EOL . '
+                    public: ' . $classProperties['public'] . \PHP_EOL . '
+                    protected: ' . $classProperties['protected'] . \PHP_EOL . '
+                    private: ' . $classProperties['private'] . \PHP_EOL . '
+                Methods:
+                    public: ' . $classMethods['public'] . \PHP_EOL . '
+                    protected: ' . $classMethods['protected'] . \PHP_EOL . '
+                    private: ' . $classMethods['private'] . \PHP_EOL;
+
+        $output->writeln($infoResult);
 
         return self::SUCCESS;
     }
