@@ -13,51 +13,64 @@ declare(strict_types=1);
 
 namespace ITEA\PhpStaticAnalyzer\Command;
 
-use ITEA\PhpStaticAnalyzer\Analyzer\ClassesCreatedByDeveloperAnalyzer;
+use ITEA\PhpStaticAnalyzer\Analyzer\ClassByNameAnalyzer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @author Volodymyr Kupriienko <vladimir.kuprienko@itea.ua>
+ * Command class for working with ClassByNameAnalyzer and outputting the result.
+ *
+ * @author Alexey Sk <gid.azure@gmail.com>
  */
-final class ClassesCreatedByDeveloperCommand extends Command
+final class ClassByNameAnalyzeCommand extends Command
 {
-    protected static $defaultName = 'classes-created-by';
-    private ClassesCreatedByDeveloperAnalyzer $analyzer;
+    protected static $defaultName = 'class-info-by-name';
+    private ClassByNameAnalyzer $analyzer;
 
-    public function __construct(ClassesCreatedByDeveloperAnalyzer $analyzer)
+    public function __construct(ClassByNameAnalyzer $analyzer)
     {
         parent::__construct();
         $this->analyzer = $analyzer;
     }
 
+    /**
+     * Configure method for creating console command.
+     */
     protected function configure(): void
     {
         $this
-            ->setDescription('Gets count of classes created by needed developer')
+            ->setDescription('Get info about class properties (count) and methods(count)')
             ->addArgument(
                 'project_src_path',
                 InputArgument::REQUIRED,
                 'Absolute path to PHP project source code to analyze.'
             )
             ->addArgument(
-                'email',
+                'class_name',
                 InputArgument::REQUIRED,
-                'E-mail address of needed developer.'
+                'The name of the class on which to analyze'
             )
         ;
     }
 
+    /**
+     * Execute method for call analyze method from ClassByNameAnalyzer.
+     *
+     * @param InputInterface  $input  Input interface for pass arguments into console command
+     * @param OutputInterface $output Output interface for display result of console command
+     *
+     * @return int Returnable result value
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $projectSrcPath = $input->getArgument('project_src_path');
-        $email = $input->getArgument('email');
+        $className = $input->getArgument('class_name');
 
-        $count = $this->analyzer->analyze($email, $projectSrcPath);
+        $info = $this->analyzer->analyze($className, $projectSrcPath);
 
-        $output->writeln(\sprintf('Developer with email <info>%s</info> created <info>%d</info> classes.', $email, $count));
+        $output->writeln($info);
 
         return self::SUCCESS;
     }
