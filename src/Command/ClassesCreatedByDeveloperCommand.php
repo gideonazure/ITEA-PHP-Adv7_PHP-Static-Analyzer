@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the "default-project" package.
+ *
+ * (c) Vladimir Kuprienko <vldmr.kuprienko@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ITEA\PhpStaticAnalyzer\Command;
 
 use ITEA\PhpStaticAnalyzer\Analyzer\ClassesCreatedByDeveloperAnalyzer;
@@ -18,12 +27,11 @@ final class ClassesCreatedByDeveloperCommand extends Command
     protected static $defaultName = 'classes-created-by';
     private ClassesCreatedByDeveloperAnalyzer $analyzer;
 
-    public function __construct(ClassesCreatedByDeveloperAnalyzer  $analyzer)
+    public function __construct(ClassesCreatedByDeveloperAnalyzer $analyzer)
     {
         parent::__construct();
         $this->analyzer = $analyzer;
     }
-
 
     protected function configure(): void
     {

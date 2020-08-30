@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the "default-project" package.
+ *
+ * (c) Vladimir Kuprienko <vldmr.kuprienko@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ITEA\PhpStaticAnalyzer\Analyzer;
 
 use ITEA\PhpStaticAnalyzer\Util\PhpFileUtil;
@@ -27,7 +36,7 @@ final class ClassesCreatedByDeveloperAnalyzer
         $counter = 0;
 
         foreach ($finder as $phpFilePath) {
-            $classNamespace = PhpFileUtil::getСlassNameFromFile($phpFilePath->getRealPath());
+            $classNamespace = PhpFileUtil::getClassNameFromFile($phpFilePath->getRealPath());
             $docBlock = $this->getDocBlockFromClass($classNamespace);
 
             if (null !== $docBlock && $this->isClassAuthor($docBlock, $email)) {

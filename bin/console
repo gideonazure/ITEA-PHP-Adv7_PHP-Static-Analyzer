@@ -7,7 +7,6 @@ use Symfony\Component\Console\Application;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-
 $application = new Application('PHP Static Analyzer', 'v2.0.0');
 $analyzer = new ClassByNameAnalyzer();
 $command = new ClassByNameAnalyzeCommand($analyzer);
