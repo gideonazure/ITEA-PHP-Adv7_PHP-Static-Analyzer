@@ -67,7 +67,14 @@ final class ClassByNameAnalyzeCommand extends Command
     {
         $projectSrcPath = $input->getArgument('project_src_path');
         $className = $input->getArgument('class_name');
-        $info = $this->analyzer->analyze($className, $projectSrcPath);
+        $info = [];
+
+        try {
+            $info = $this->analyzer->analyze($className, $projectSrcPath);
+        }catch (\ReflectionException $e){
+            echo $e->getMessage();
+            return $e->getCode();
+        }
 
         $classProperties = $info['properties'];
         $classMethods = $info['methods'];
