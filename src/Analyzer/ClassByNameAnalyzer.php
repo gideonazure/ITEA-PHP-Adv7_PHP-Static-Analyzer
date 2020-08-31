@@ -20,11 +20,9 @@ namespace ITEA\PhpStaticAnalyzer\Analyzer;
  */
 final class ClassByNameAnalyzer
 {
-
     private const CLASS_TYPE_ABSTRACT = 'Abstract';
     private const CLASS_TYPE_FINAL = 'Final';
     private const CLASS_TYPE_NORMAL = 'Normal';
-
 
     /**
      * Method analyze class structure and return info about count of properties and methods.
@@ -71,7 +69,7 @@ final class ClassByNameAnalyzer
      */
     private function getClassReflectionInstance(string $classNamespace)
     {
-        if(!class_exists($classNamespace)){
+        if (!\class_exists($classNamespace)) {
             throw new \ReflectionException('Passed class not found. Please, check argument');
         }
 

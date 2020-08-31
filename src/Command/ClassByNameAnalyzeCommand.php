@@ -71,8 +71,9 @@ final class ClassByNameAnalyzeCommand extends Command
 
         try {
             $info = $this->analyzer->analyze($className, $projectSrcPath);
-        }catch (\ReflectionException $e){
+        } catch (\ReflectionException $e) {
             echo $e->getMessage();
+
             return $e->getCode();
         }
 
